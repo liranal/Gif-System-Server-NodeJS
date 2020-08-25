@@ -1,3 +1,4 @@
+require("./config/database");
 const events = require("./EVENTS");
 const Response = require("./Responses");
 const NEW_CLIENT = require("./EVENTS").NEW_CLIENT;
@@ -10,9 +11,8 @@ var UsersSubjects = require("./middlewares/dataSaver").UsersSubjects;
 var HistoryData = require("./middlewares/dataSaver").HistoryData;
 var gifAPI = require("./models/gifAPI");
 var cors = require("cors");
-
+const Gif = require("./models/Gif");
 const port = process.env.PORT || 8321;
-
 const app = express();
 
 app.use(cors());
@@ -40,8 +40,6 @@ setInterval(function () {
   counter++;
 }, 1000);
 
-//app.set("UsersSubjects", UsersSubjects);
-
 var activeSockets = new Map();
 io1.on("connection", function (socket1) {
   socket1.on(NEW_CLIENT, function (data) {
@@ -54,11 +52,11 @@ io1.on("connection", function (socket1) {
     }
     activeSockets.set(data.userId, socket1.id);
     if (!HistoryData.has(data.userId)) {
-      HistoryData.set(data.userId, []);
+      //console.log(HistoryData);
     } else {
       var loadHistory = HistoryData.get(data.userId);
     }
-    if (!UsersSubjects.has(data.userId)) UsersSubjects.set(data.userId, []);
+    //if (!UsersSubjects.has(data.userId)) UsersSubjects.set(data.userId, []);
     io1.emit(
       events.CONNECTION_SUCCESS,
       JSON.stringify(Response.CONNECTION_SUCCESS(data.userId, loadHistory))
@@ -71,22 +69,11 @@ io1.on("connection", function (socket1) {
       if (value === socket1.client.id) {
         console.log("USERID: " + userId);
         activeSockets.delete(userId);
+        SaveGifsInDB(userId);
+        //HistoryData.delete(userId);
       }
     });
   });
-
-  /*socket1.on(events.NEW_SUBJECT, function (data) {
-    console.log("!!! NEW SUBJECT !!!");
-    console.log(data);
-    userSubject = JSON.parse(data);
-    UsersSubjects.get(userSubject.userId).push({
-      subject: userSubject.subject,
-      timing: userSubject.timing,
-      startTime: userSubject.startTime,
-    });
-  });
-
-  */
 });
 
 const sendGIF = () => {
@@ -102,7 +89,7 @@ const sendGIF = () => {
           gifUrl: gif.data.images.fixed_height_small.url,
           width: gif.data.images.fixed_height_small.width,
           height: gif.data.images.fixed_height_small.height,
-          id: gif.data.title
+          id: gif.data.title,
         });
         HistoryData.get(userId).push(JSON.parse(message));
 
@@ -115,4 +102,17 @@ const sendGIF = () => {
   });
 };
 
+const SaveGifsInDB = (userId) => {
+  HistoryData.get(userId).forEach((gif) => {
+    let newGif = new Gif({
+      userId: userId,
+      subject: gif.subject,
+      gifUrl: gif.gifUrl,
+      width: gif.width,
+      height: gif.height,
+      id: gif.title,
+    });
+    newGif.save();
+  });
+};
 console.log("Server Listening At Port %s...", port);

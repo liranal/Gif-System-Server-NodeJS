@@ -16,3 +16,8 @@ exports.SEND_DATA = (data) => {
 };
 
 exports.NOT_FOUND = { Code: 404, Message: "Not found" };
+
+exports.ALREADY_EXIST_SUBJECT = {
+  Code: 300,
+  Message: "Subject Already Exist",
+};
