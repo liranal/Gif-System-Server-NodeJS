@@ -6,21 +6,26 @@ const postSubjects = require("./Subject/postSubjects");
 const patchSubjects = require("./Subject/patchSubjects");
 const deleteSubjects = require("./Subject/deleteSubjects");
 
-const middleWare = require("../middlewares/dataSaver");
+const {
+  deleteMethodMiddleWare,
+  getMethodMiddleWare,
+  patchMethodMiddleWare,
+  postMethodMiddleWare,
+} = require("../middlewares/dataSaver");
 
-router.get("/:userId", [middleWare.getMethodMiddleWare], getSubjects);
+router.get("/:userId", [getMethodMiddleWare], getSubjects);
 
-router.post("/", [middleWare.postMethodMiddleWare], postSubjects);
+router.post("/", [postMethodMiddleWare], postSubjects);
 
 router.patch(
   "/:userId/Subject/:subject",
-  [middleWare.patchMethodMiddleWare],
+  [patchMethodMiddleWare],
   patchSubjects
 );
 
 router.delete(
   "/:userId/Subject/:subject",
-  [middleWare.deleteMethodMiddleWare],
+  [deleteMethodMiddleWare],
   deleteSubjects
 );
 
