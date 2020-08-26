@@ -3,6 +3,7 @@ const { NEW_GIF } = require("../GlobalObjects/EVENTS");
 var UsersSubjects = require("../GlobalObjects/UsersSubjects");
 var HistoryData = require("../GlobalObjects/HistoryData");
 var activeSockets = require("../GlobalObjects/ActiveSockets");
+const findObjectInUsersBySubjectName = require("../middlewares/utils/findObjectInUsersBySubjectName");
 
 module.exports = (io1) => {
   UsersSubjects.forEach((subjects, userId) => {
@@ -10,7 +11,11 @@ module.exports = (io1) => {
       let timeDiff = parseInt(
         (new Date().getTime() % subject.startTime) / 1000
       );
-      if (timeDiff % subject.timing === 0 && activeSockets.has(userId)) {
+      if (
+        timeDiff % subject.timing === 0 &&
+        activeSockets.has(userId) &&
+        findObjectInUsersBySubjectName(subject.subject, userId) > -1
+      ) {
         const gif = await gifAPI.GetRandomGif(subject.subject);
         let message = JSON.stringify({
           subject: subject.subject,
@@ -19,12 +24,14 @@ module.exports = (io1) => {
           height: gif.data.images.fixed_height_small.height,
           id: gif.data.title,
         });
-        HistoryData.get(userId).push(JSON.parse(message));
+        if (findObjectInUsersBySubjectName(subject.subject, userId) > -1) {
+          HistoryData.get(userId).push(JSON.parse(message));
 
-        console.log("Sending message: " + JSON.stringify(message));
-        console.log("Sending To: " + userId);
+          console.log("Sending message: " + JSON.stringify(message));
+          console.log("Sending To: " + userId);
 
-        io1.to(activeSockets.get(userId)).emit(NEW_GIF, message);
+          io1.to(activeSockets.get(userId)).emit(NEW_GIF, message);
+        }
       }
     });
   });
