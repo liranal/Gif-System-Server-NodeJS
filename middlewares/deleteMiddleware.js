@@ -15,12 +15,14 @@ module.exports = (req, res, next) => {
         (subject) => subject.subject !== userSubject.subject
       )
     );
-    HistoryData.set(
-      userSubject.userId,
-      HistoryData.get(userSubject.userId).filter(
-        (subject) => subject.subject !== userSubject.subject
-      )
-    );
+    if (HistoryData.has(userSubject.userId)) {
+      HistoryData.set(
+        userSubject.userId,
+        HistoryData.get(userSubject.userId).filter(
+          (subject) => subject.subject !== userSubject.subject
+        )
+      );
+    }
   }
   req.userSubject = userSubject;
   next();

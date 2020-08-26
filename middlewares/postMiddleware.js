@@ -6,7 +6,9 @@ module.exports = (req, res, next) => {
   userSubject = req.body;
   if (!UsersSubjects.has(userSubject.userId)) {
     loadUserSubjectsFromDB(userSubject.userId);
-    console.log(UsersSubjects);
+    if (!UsersSubjects.has(userSubject.userId)) {
+      UsersSubjects.set(userId, []);
+    }
   }
   let isObjectHasBeenIndexed = findObjectInUsersBySubjectName(
     userSubject.subject,
