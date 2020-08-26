@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
-
+const dotenv = require("dotenv");
+dotenv.config();
+const MONGO_URI = process.env.MONGO_URI;
 /*Local DB*/
 //mongoose.connect("mongodb://localhost:27017/gifSystemDB");
 
 /*Cloud DB*/
-mongoose.connect(
-  "mongodb+srv://liranal:liraneilary1@gif-system.wslz3.mongodb.net/gifSystemDB?retryWrites=true&w=majority"
-);
+mongoose.connect(MONGO_URI);
 
 const db = mongoose.connection;
 
