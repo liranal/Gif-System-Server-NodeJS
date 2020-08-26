@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 mongoose.connect(
   "mongodb+srv://liranal:liraneilary1@gif-system.wslz3.mongodb.net/gifSystemDB?retryWrites=true&w=majority"
 );
-
+mongoose.set("debug", true);
 const db = mongoose.connection;
 
 db.once("open", () => console.log("Database opened..."));
