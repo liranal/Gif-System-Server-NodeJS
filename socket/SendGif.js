@@ -26,7 +26,6 @@ module.exports = (io1) => {
         });
         if (findObjectInUsersBySubjectName(subject.subject, userId) > -1) {
           HistoryData.get(userId).push(JSON.parse(message));
-
           console.log("Sending message: " + JSON.stringify(message));
           console.log("Sending To: " + userId);
 
