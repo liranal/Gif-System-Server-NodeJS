@@ -2,6 +2,8 @@ require("./config/database");
 const http = require("http");
 const express = require("express");
 const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+dotenv.config();
 var cors = require("cors");
 
 const app = express();
