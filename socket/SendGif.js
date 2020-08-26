@@ -17,6 +17,11 @@ module.exports = (io1) => {
         findObjectInUsersBySubjectName(subject.subject, userId) > -1
       ) {
         const gif = await gifAPI.GetRandomGif(subject.subject);
+        console.log(
+          findObjectInUsersBySubjectName(subject.subject, userId) +
+            " " +
+            gif.data.title
+        );
         let message = JSON.stringify({
           subject: subject.subject,
           gifUrl: gif.data.images.fixed_height_small.url,
@@ -24,6 +29,7 @@ module.exports = (io1) => {
           height: gif.data.images.fixed_height_small.height,
           id: gif.data.title,
         });
+
         if (findObjectInUsersBySubjectName(subject.subject, userId) > -1) {
           HistoryData.get(userId).push(JSON.parse(message));
           console.log("Sending message: " + JSON.stringify(message));

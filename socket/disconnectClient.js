@@ -14,15 +14,19 @@ module.exports = (socket1) => () => {
 };
 
 const SaveGifsInDB = (userId) => {
-  HistoryData.get(userId).forEach((gif) => {
-    let newGif = new Gif({
-      userId: userId,
-      subject: gif.subject,
-      gifUrl: gif.gifUrl,
-      width: gif.width,
-      height: gif.height,
-      id: gif.title,
+  try {
+    HistoryData.get(userId).forEach((gif) => {
+      let newGif = new Gif({
+        userId: userId,
+        subject: gif.subject,
+        gifUrl: gif.gifUrl,
+        width: gif.width,
+        height: gif.height,
+        id: gif.title,
+      });
+      newGif.save();
     });
-    newGif.save();
-  });
+  } catch (err) {
+    console.log(err);
+  }
 };
