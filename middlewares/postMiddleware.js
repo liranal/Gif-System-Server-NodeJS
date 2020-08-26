@@ -3,7 +3,6 @@ const loadUserSubjectsFromDB = require("./utils/loadUserSubjectsFromDB");
 const findObjectInUsersBySubjectName = require("./utils/findObjectInUsersBySubjectName");
 
 module.exports = (req, res, next) => {
-  console.log("POST");
   userSubject = req.body;
   if (!UsersSubjects.has(userSubject.userId)) {
     loadUserSubjectsFromDB(userSubject.userId);
@@ -13,6 +12,7 @@ module.exports = (req, res, next) => {
     userSubject.subject,
     userSubject.userId
   );
+  console.log(isObjectHasBeenIndexed);
   if (isObjectHasBeenIndexed === -1) {
     UsersSubjects.get(userSubject.userId).push({
       subject: userSubject.subject,
