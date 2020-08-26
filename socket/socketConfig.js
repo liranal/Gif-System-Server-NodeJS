@@ -8,7 +8,6 @@ var sendGIF = require("./SendGif");
 module.exports = (server) => {
   var counter = 0;
   setInterval(function () {
-    console.log(counter);
     sendGIF(io1);
     counter++;
   }, 1000);

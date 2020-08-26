@@ -14,7 +14,6 @@ module.exports = (req, res, next) => {
     userSubject.subject,
     userSubject.userId
   );
-  console.log(isObjectHasBeenIndexed);
   if (isObjectHasBeenIndexed === -1) {
     UsersSubjects.get(userSubject.userId).push({
       subject: userSubject.subject,
