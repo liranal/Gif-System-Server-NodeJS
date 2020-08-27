@@ -26,3 +26,12 @@
 1. The client connected to Cloud server. In App.js and in /api/subjecs.js change the comment for what server you want to communicate.
 <h3><b>Make sure you have installed mongoDB</b></h4><br>
 <p>
+
+ <hr>
+ <h2>Configuration</h2>
+ Create .env file to configure what db you want to connect with
+ 
+  ```
+  MONGO_URI=
+  PORT=
+```
